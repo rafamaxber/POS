@@ -1,5 +1,6 @@
 .auth-layout {
-  width: 420px;
+  max-width: 420px;
+  width: 90%;
   border-radius: 5px;
   background-color: #fff;
   padding: 15px;

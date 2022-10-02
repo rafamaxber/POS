@@ -1,6 +1,7 @@
 .product-register-form,
 .product-form-title {
-  width: 752px;
+  max-width: 752px;
+  width: 90%;
   margin: 0 auto 0;
 }
 

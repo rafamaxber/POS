@@ -17,8 +17,9 @@
   gap: 16px;
 }
 
-.search-form .form-item{
-  width: 670px;
+.search-form .form-item {
+  max-width: 670px;
+  width: 100%;
 }
 
 .showcase {
@@ -40,6 +41,7 @@
   width: 100%;
   background-color: #fff;
   border-radius: 5px;
+  min-width: 470px;
 }
 
 .product-item {
@@ -68,4 +70,13 @@
 .side-bar-list-item a {
   color: #666;
   text-decoration: none;
+}
+
+@media screen and (max-width: 768px) {
+  .side-bar {
+    display: none;
+  }
+  .product-list {
+    min-width: 100%;
+  }
 }
