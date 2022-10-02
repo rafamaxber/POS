@@ -3,7 +3,16 @@ import './style.css'
 export default function ProductList() {
   return (
     <div className="page-container">
-      <div className="search-bar">search bar</div>
+      <div className="search-bar">
+      <form className='search-form'>
+        <div className="form-item">
+          <input className='my-input' autoFocus type="search" name="q" />
+        </div>
+        <div className="form-button">
+          <button className='my-btn' type="submit">Buscar</button>
+        </div>
+      </form>
+      </div>
 
       <div className="showcase">
         <nav className="side-bar">
@@ -33,10 +42,13 @@ export default function ProductList() {
                 <span className='product-key'>Preço:</span> <span className='product-value'>R$ 10,22</span>
               </div>
               <div className='product-data-line'>
-                <span className='product-key'>Endereço:</span> <span className='product-value'>PL-02</span>
+                <span className='product-key'>Quantidade:</span> <span className='product-value'>10</span>
               </div>
               <div className='product-data-line'>
-                Descrição do produto
+                <span className='product-key'>Validade:</span> <span className='product-value'>10/10/2022</span>
+              </div>
+              <div className='product-data-line'>
+                <span className='product-key'>Endereço:</span> <span className='product-value'>PL-02</span>
               </div>
             </div>
           </div>
@@ -51,11 +63,15 @@ export default function ProductList() {
                 <span className='product-key'>Preço:</span> <span className='product-value'>R$ 10,22</span>
               </div>
               <div className='product-data-line'>
-                <span className='product-key'>Endereço:</span> <span className='product-value'>PL-02</span>
+                <span className='product-key'>Quantidade:</span> <span className='product-value'>10</span>
               </div>
               <div className='product-data-line'>
-                Descrição do produto
+                <span className='product-key'>Validade:</span> <span className='product-value'>10/10/2022</span>
               </div>
+              <div className='product-data-line'>
+                <span className='product-key'>Endereço:</span> <span className='product-value'>PL-02</span>
+              </div>
+
             </div>
           </div>
   

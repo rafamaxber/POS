@@ -8,35 +8,59 @@ import {
   RouterProvider,
 } from "react-router-dom";
 
+const Home = lazy(() => import('./pages/Home/Home'))
+const AuthLayout = lazy(() => import('./pages/AuthLayout/AuthLayout'))
+const MasterPage = lazy(() => import('./pages/MasterPage/MasterPage'))
 const LoginPage = lazy(() => import('./pages/Login/Login'))
 const ProductList = lazy(() => import('./pages/ProductList/ProductList'))
+const ProductRegister = lazy(() => import('./pages/ProductRegister/ProductRegister'))
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Hello world!</div>,
-  },
-  {
-    path: "/login",
-    element: <LoginPage onLogin={function () {
-      console.log('login')
-      return Promise.resolve();
-      // return Promise.reject('Erro monstro')
-    }} />,
-  },
-  {
-    path: "/stock/view",
-    element: <ProductList />,
-
-  },
-  {
-    path: "/stock/view/:id",
-    element: <div>stock::view one!</div>,
-  },
-  {
-    path: "/stock/add",
-    element: <div>stock:: add!</div>,
-  },
+    element: <MasterPage />,
+    children: [
+      {
+        path: "/",
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "stock",
+        element: <ProductList />,
+    
+      },
+      {
+        path: "stock/:id",
+        element: <ProductRegister />,
+      },
+      {
+        path: "stock/add",
+        element: <ProductRegister />,
+      },
+      {
+        path: "stock/:id/edit",
+        element: <ProductRegister />,
+      },
+      {
+        element: <AuthLayout />,
+        children: [
+          {
+            path: "login",
+            element: <LoginPage onLogin={function () {
+              console.log('login')
+              return Promise.resolve();
+              // return Promise.reject('Erro monstro')
+            }} />,
+          },
+          // {
+          //   path: "logout",
+          //   action: logoutUser,
+          // },
+        ],
+      },
+    ]
+  }
 ]);
 
 function App() {

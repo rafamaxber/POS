@@ -1,0 +1,53 @@
+.product-register-form,
+.product-form-title {
+  width: 752px;
+  margin: 0 auto 0;
+}
+
+.product-form-header {
+  background-color: #f6f6f6;
+  height: 300px;
+  margin-bottom: -80px;
+}
+
+.product-form-title {
+  font-size: 28px;
+  font-weight: 600;
+  position: relative;
+  color: #333;
+  top: 35%;
+}
+
+.form-item {
+  margin-bottom: 16px;
+}
+
+.form-card {
+  background-color: #fff;
+  margin-bottom: 32px;
+  padding: 16px;
+  border-radius: 4px;
+  box-shadow: 0 0 1px 0 rgb(0 0 0 / 5%), 0 1px 2px 0 rgb(0 0 0 / 15%);
+}
+
+.form-card-title {
+  color: #333;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;  
+}
+
+.my-custom-input-upload {
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  padding: 10px;
+  background-color: #f8f8f8;
+  color: #2196f3;
+  border-radius: 16px;
+  border: 2px dashed #ebebeb;
+}
+
+.my-input-upload {
+  display: none;
+}

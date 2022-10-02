@@ -32,7 +32,7 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
     
   }
   return (
-    <div className="login-page">
+    <>
       <h1 className='login-title'>Acessar Sistema</h1>
       <form className='login-form' onSubmit={handleLogin}>
         <div className="form-item">
@@ -47,6 +47,6 @@ export default function LoginPage({ onLogin }: LoginPageProps) {
           <button className='my-btn' type="submit">Entrar</button>
         </div>
       </form>
-    </div>
+    </>
   );
 }
