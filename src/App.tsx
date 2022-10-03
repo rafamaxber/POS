@@ -7,6 +7,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import { logInWithEmailAndPassword } from './gateways/firebase';
+import { Loading } from './components/Loading/Loading';
 
 const Home = lazy(() => import('./pages/Home/Home'))
 const AuthLayout = lazy(() => import('./pages/AuthLayout/AuthLayout'))
@@ -42,30 +44,26 @@ const router = createBrowserRouter([
         path: "stock/:id/edit",
         element: <ProductRegister />,
       },
-      {
-        element: <AuthLayout />,
-        children: [
-          {
-            path: "login",
-            element: <LoginPage onLogin={function () {
-              console.log('login')
-              return Promise.resolve();
-              // return Promise.reject('Erro monstro')
-            }} />,
-          },
-          // {
-          //   path: "logout",
-          //   action: logoutUser,
-          // },
-        ],
-      },
     ]
-  }
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "login",
+        element: <LoginPage onLogin={({ password, email }) => logInWithEmailAndPassword(email, password)} />,
+      },
+      // {
+      //   path: "logout",
+      //   action: logoutUser,
+      // },
+    ],
+  },
 ]);
 
 function App() {
   return (
-    <Suspense fallback={<div>Carregando...</div>}>
+    <Suspense fallback={<Loading />}>
       {/* <NavBar /> */}
       <RouterProvider router={router} />
       <ToastContainer position="bottom-center" />

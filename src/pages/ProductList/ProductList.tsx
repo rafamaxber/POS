@@ -1,6 +1,17 @@
+import { useEffect, useState } from 'react'
+import { StockDataType, StockRepository } from '../../data/StockRepository'
 import './style.css'
 
 export default function ProductList() {
+  const [products, setProducts] = useState<StockDataType[]>([])
+
+  useEffect(() => {
+    new StockRepository().getStockData()
+      .then((data) => {
+        setProducts(data)
+        console.log(data)
+      })
+  }, [])
   return (
     <div className="page-container">
       <div className="search-bar">
@@ -32,49 +43,34 @@ export default function ProductList() {
 
         <div className="product-list">
           
-          <div className="product-item">
-            <div className='product-image'>
-              <img src="https://via.placeholder.com/150" alt="product" />
-            </div>
-            <div className="product-info">
-              <div className='product-title'>Nome do produto</div>
-              <div className='product-data-line'>
-                <span className='product-key'>Preço:</span> <span className='product-value'>R$ 10,22</span>
+          {
+            products && products.map((product) => (
+              <div className="product-item" key={product.bar_code}>
+                <div className='product-image'>
+                  <img src="https://via.placeholder.com/150" alt="product" />
+                </div>
+                <div className="product-info">
+                  <div className='product-title'>{product.name}</div>
+                  <div className='product-data-line'>
+                    <span className='product-key'>Código:</span> <span className='product-value'>{product.bar_code} {product.ref_code}</span>
+                  </div>
+                  <div className='product-data-line'>
+                    <span className='product-key'>Preço:</span> <span className='product-value'>R$ {product.price_final}</span>
+                  </div>
+                  <div className='product-data-line'>
+                    <span className='product-key'>Quantidade:</span> <span className='product-value'>{product.quantity}</span>
+                  </div>
+                  {product?.expire_at && <div className='product-data-line'>
+                    <span className='product-key'>Validade:</span> <span className='product-value'>{product.expire_at.toDate().toJSON()}</span>
+                  </div>}
+                  <div className='product-data-line'>
+                    <span className='product-key'>Endereço:</span> <span className='product-value'>{product.current_address}</span>
+                  </div>
+                </div>
               </div>
-              <div className='product-data-line'>
-                <span className='product-key'>Quantidade:</span> <span className='product-value'>10</span>
-              </div>
-              <div className='product-data-line'>
-                <span className='product-key'>Validade:</span> <span className='product-value'>10/10/2022</span>
-              </div>
-              <div className='product-data-line'>
-                <span className='product-key'>Endereço:</span> <span className='product-value'>PL-02</span>
-              </div>
-            </div>
-          </div>
-          
-          <div className="product-item">
-            <div className='product-image'>
-              <img src="https://via.placeholder.com/150" alt="product" />
-            </div>
-            <div className="product-info">
-              <div className='product-title'>Nome do produto</div>
-              <div className='product-data-line'>
-                <span className='product-key'>Preço:</span> <span className='product-value'>R$ 10,22</span>
-              </div>
-              <div className='product-data-line'>
-                <span className='product-key'>Quantidade:</span> <span className='product-value'>10</span>
-              </div>
-              <div className='product-data-line'>
-                <span className='product-key'>Validade:</span> <span className='product-value'>10/10/2022</span>
-              </div>
-              <div className='product-data-line'>
-                <span className='product-key'>Endereço:</span> <span className='product-value'>PL-02</span>
-              </div>
+            ))
+          }
 
-            </div>
-          </div>
-  
         </div>
       </div>
     </div>
