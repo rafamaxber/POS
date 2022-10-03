@@ -1,3 +1,4 @@
+import { Timestamp } from 'firebase/firestore'
 import { useEffect, useState } from 'react'
 import { StockDataType, StockRepository } from '../../data/StockRepository'
 import './style.css'
@@ -61,7 +62,7 @@ export default function ProductList() {
                     <span className='product-key'>Quantidade:</span> <span className='product-value'>{product.quantity}</span>
                   </div>
                   {product?.expire_at && <div className='product-data-line'>
-                    <span className='product-key'>Validade:</span> <span className='product-value'>{product.expire_at.toDate().toJSON()}</span>
+                    {/* <span className='product-key'>Validade:</span> <span className='product-value'>{Timestamp.fromMillis product.expire_at.toDate().toJSON()}</span> */}
                   </div>}
                   <div className='product-data-line'>
                     <span className='product-key'>Endereço:</span> <span className='product-value'>{product.current_address}</span>
