@@ -1,14 +1,21 @@
+import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { UploadFile } from '../../components/UploadFile/UploadFile';
 import { StockDataType, StockRepository } from '../../data/StockRepository';
 import './style.css'
 
 export default function ProductRegister() {
+  const [photoRef, setPhotoRef] = useState('');
+  
   function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
     const body = Object.fromEntries(new FormData(event.currentTarget)) as unknown as StockDataType;
 
-    new StockRepository().addItemToStock(body)
+    new StockRepository().addItemToStock({
+      ...body,
+      photo: photoRef
+    })
       .then(() => {
         toast.success('Produto cadastrado com sucesso!');
       })
@@ -42,7 +49,7 @@ export default function ProductRegister() {
             
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="ref_code">SKU:</label>
-              <input className='my-input' autoFocus required type="text" autoComplete='false' name="ref_code" id="ref_code" />
+              <input className='my-input' type="text" autoComplete='false' name="ref_code" id="ref_code" />
             </div>
             
             <div className="form-item">
@@ -52,7 +59,7 @@ export default function ProductRegister() {
             
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="category">Categoria:</label>
-              <select className='my-input' name='category' id='category'>
+              <select className='my-input' required name='category' id='category'>
                 <option>Selecionar uma categoria:</option>
                 <option value="cat1">ca1</option>
                 <option value="cat2">cat2</option>
@@ -60,8 +67,7 @@ export default function ProductRegister() {
             </div>
             
           </div>
-            
-            
+
           <div className="form-card">
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="price_final">Preço de venda:</label>
@@ -90,27 +96,22 @@ export default function ProductRegister() {
             
           <div className="form-card">
             <div className="form-item">
-              <label className='my-label' aria-required htmlFor="expire_at">Validade:</label>
-              <input className='my-input' required type="date" autoComplete='false' name="expire_at" id="expire_at" />
+              <label className='my-label' htmlFor="expire_at">Validade:</label>
+              <input className='my-input' type="date" autoComplete='false' name="expire_at" id="expire_at" />
             </div>
           </div>
-          
 
           <div className="form-upload-container form-card">
             <div className='form-card-title'>
               Faça o upload da imagem do produto
             </div>
 
-            <div className="form-item-upload">
-              <label className='my-custom-input-upload' htmlFor="photo">Clique aqui para incluir uma nova imagem:</label>
-              <input className='my-input-upload' multiple accept="image/*" type="file" name="photo" id="photo" />
-            </div>
+            <UploadFile setReferenceFilePath={(ref) => setPhotoRef(ref || '')}/>
           </div>
 
-          <div className="form-button">
+          <div className="form-button-container">
             <button className='my-btn' type="submit">Criar novo produto</button>
           </div>
-
 
         </form>
       </div>

@@ -15,8 +15,8 @@ import {
   collection,
   where,
   addDoc,
-  serverTimestamp,
 } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 export enum CollectionNames {
   STOCK = "stock",
@@ -37,6 +37,7 @@ const googleProvider = new GoogleAuthProvider();
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 
 // function getSKU({ myFirstInput, mySecondInput }) {

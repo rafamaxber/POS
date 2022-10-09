@@ -1,0 +1,31 @@
+
+.myCustomInputUpload {
+  cursor: pointer;
+  text-align: center;
+  display: block;
+  padding: 10px;
+  background-color: #f8f8f8;
+  color: #2196f3;
+  border-radius: 16px;
+  border: 2px dashed #ebebeb;
+}
+
+.myInputUpload {
+  display: none;
+}
+
+.uploadPreview {
+  margin-top: 16px;
+}
+
+.uploadPreview img {
+  border-radius: 8px;
+}
+
+.uploadBtn {
+  width: 100%;
+  margin-top: 16px;
+  font-size: 15px;
+  height: auto;
+  padding: 10px;
+}

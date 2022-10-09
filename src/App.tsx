@@ -64,7 +64,6 @@ const router = createBrowserRouter([
 function App() {
   return (
     <Suspense fallback={<Loading />}>
-      {/* <NavBar /> */}
       <RouterProvider router={router} />
       <ToastContainer position="bottom-center" />
     </Suspense>
