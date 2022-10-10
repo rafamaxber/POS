@@ -32,7 +32,7 @@ export function UploadFile({ setReferenceFilePath }: { setReferenceFilePath: (pa
   return (
     <div className="form-item-upload">
       <label className={cssClasses.myCustomInputUpload} htmlFor="photo">Clique aqui para incluir uma nova imagem:</label>
-      <input className={cssClasses.myInputUpload} accept="image/*" type="file" name="photo" id="photo" onChange={handleFileChange} />
+      <input className={cssClasses.myInputUpload} accept=".jpg, .jpeg, .png" type="file" name="photo" id="photo" onChange={handleFileChange} />
       {previewFile && (
         <>
           <div className={cssClasses.uploadPreview}>
