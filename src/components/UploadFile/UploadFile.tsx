@@ -1,6 +1,6 @@
 import { ref as storageRef } from 'firebase/storage';
 import { useState } from 'react';
-import Resizer from "react-image-file-resizer";
+import Resizer from "./Resizer";
 import { useUploadFile } from 'react-firebase-hooks/storage';
 import { storage } from '../../gateways/firebase';
 import cssClasses from './UploadFile.module.css';
@@ -54,7 +54,7 @@ function resizeFile(file: File): Promise<string | File | Blob | ProgressEvent<Fi
       "WEBP",
       100,
       0,
-      (uri) => {
+      (uri: string) => {
         console.log(uri)
         return resolve(uri);
       },

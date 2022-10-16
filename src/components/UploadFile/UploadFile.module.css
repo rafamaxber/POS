@@ -28,4 +28,6 @@
   font-size: 15px;
   height: auto;
   padding: 10px;
+  display: block;
+  text-align: center;
 }
