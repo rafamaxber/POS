@@ -1,64 +1,75 @@
-import { ref as storageRef } from 'firebase/storage';
-import { useState } from 'react';
-import Resizer from "react-image-file-resizer";
+import { getDownloadURL, ref as storageRef, uploadBytesResumable } from 'firebase/storage';
+import { useRef, useState } from 'react';
 import { useUploadFile } from 'react-firebase-hooks/storage';
+
+import { FilePond, registerPlugin } from "react-filepond";
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import FilePondPluginImageResize from 'filepond-plugin-image-resize';
+import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
+
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
+import "filepond/dist/filepond.min.css";
+
 import { storage } from '../../gateways/firebase';
 import cssClasses from './UploadFile.module.css';
 
+registerPlugin(
+  FilePondPluginImagePreview, 
+  FilePondPluginImageResize, 
+  FilePondPluginImageExifOrientation, 
+  FilePondPluginFileValidateType
+);
+
 export function UploadFile({ setReferenceFilePath }: { setReferenceFilePath: (path?: string) => void }) {
-  const [uploadFile, uploading, snapshot, error] = useUploadFile();
-  const [selectedFile, setSelectedFile] = useState<File>();
-  const [previewFile, setPreviewFile] = useState('');
-  const ref = storageRef(storage, `products/${selectedFile?.name}`);
+  const pondRef = useRef<FilePond>(null);
+  const [file, setFile] = useState<File>();
+  const [uploadTask, uploadTaskState] = useUploadFile();
 
-  const upload = async () => {
-    if (selectedFile) {
-      const result = await uploadFile(ref, selectedFile, {
-        contentType: 'image/jpeg'
-      });
-
-      setReferenceFilePath(result?.ref.toString());
-    }
+  function handleInit() {
+    console.log("FilePond instance has initialised", pondRef.current);
   }
 
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    if (event.target.files) {
-      const resizedFile = await resizeFile(event.target.files[0]) as File;
-      setSelectedFile(resizedFile);
-      setPreviewFile(URL.createObjectURL(resizedFile));
-    }
+  function handleProcessing(fieldName, file ) {
+console.log({fieldName, file });
+
+    // setFile(file);
+    upload(file)
+  }
+
+  function upload(file: File) {
+    const uploadTask = uploadBytesResumable(storageRef(storage, `products/${file?.name}`), file as Blob);
+
+    uploadTask.on('state_changed', (snapshot) => {
+      const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+    }, (error) => {
+      console.error(error);
+    },
+    () => {
+      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        console.log('File available at', downloadURL);
+        setReferenceFilePath(downloadURL);
+      });
+    })
+
+    pondRef.current?.removeFiles();
   }
 
   return (
     <div className="form-item-upload">
-      <label className={cssClasses.myCustomInputUpload} htmlFor="photo">Clique aqui para incluir uma nova imagem:</label>
-      <input className={cssClasses.myInputUpload} accept=".jpg, .jpeg, .png" type="file" name="photo" id="photo" onChange={handleFileChange} />
-      {previewFile && (
-        <>
-          <div className={cssClasses.uploadPreview}>
-            <img height={150} src={previewFile} alt="product" />
-          </div>
-          <a className={cssClasses.uploadBtn + ' my-btn'} onClick={upload}>A foto ficou boa? <br/>Clique aqui para gravar</a>
-        </>
-      )}
+      <FilePond
+        ref={pondRef}
+        allowMultiple={false}
+        server={{ process: handleProcessing }}
+        oninit={handleInit}
+        allowImageResize
+        imageResizeTargetWidth={320}
+        allowImageExifOrientation
+        acceptedFileTypes={['image/*']}
+        instantUpload
+      />
+      <a className={cssClasses.uploadBtn + ' my-btn'} onClick={upload}>A foto ficou boa? <br/>Clique aqui para gravar</a>
     </div>
   )
-}
-
-function resizeFile(file: File): Promise<string | File | Blob | ProgressEvent<FileReader>> {
-  return new Promise((resolve) => {
-    Resizer.imageFileResizer(
-      file,
-      300,
-      300,
-      "WEBP",
-      100,
-      0,
-      (uri) => {
-        console.log(uri)
-        return resolve(uri);
-      },
-      "file",
-    );
-  });
 }
