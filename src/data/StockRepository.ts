@@ -14,6 +14,11 @@ export interface StockDataType {
   photo?: any
 }
 
+export type CategoryDataType = {
+  value: string
+  key: string
+}
+
 export class StockRepository {
   addItemToStock(body: StockDataType) {
     return addDoc(collection(db, CollectionNames.STOCK), {
@@ -35,5 +40,10 @@ export class StockRepository {
   async getStockData(): Promise<StockDataType[]> {
     const data = await getDocs(query(collection(db, CollectionNames.STOCK)));
     return data.docs.map((doc) => doc.data()) as unknown as Promise<StockDataType[]>
+  }
+  
+  async getCategoryData(): Promise<CategoryDataType[]> {
+    const data = await getDocs(query(collection(db, CollectionNames.PRODUCT_CATEGORIES)));
+    return data.docs.map((doc) => doc.data()) as unknown as Promise<CategoryDataType[]>
   }
 }

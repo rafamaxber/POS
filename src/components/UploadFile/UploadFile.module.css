@@ -15,6 +15,7 @@
 }
 
 .uploadPreview {
+  position: relative;
   margin-top: 16px;
 }
 

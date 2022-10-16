@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import { UploadFile } from '../../components/UploadFile/UploadFile';
 import { StockDataType, StockRepository } from '../../data/StockRepository';
@@ -6,6 +6,8 @@ import './style.css'
 
 export default function ProductRegister() {
   const [photoRef, setPhotoRef] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+  const firstInput = useRef<HTMLInputElement>(null);
   
   function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -17,6 +19,8 @@ export default function ProductRegister() {
       photo: photoRef
     })
       .then(() => {
+        formRef.current?.reset();
+        firstInput.current?.focus();
         toast.success('Produto cadastrado com sucesso!');
       })
       .catch((error) => {
@@ -34,7 +38,7 @@ export default function ProductRegister() {
           </div>
         </div>
 
-        <form className='product-register-form' onSubmit={handleRegister}>
+        <form className='product-register-form' onSubmit={handleRegister} ref={formRef}>
           
           <div className="form-card">
 
@@ -44,7 +48,7 @@ export default function ProductRegister() {
             
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="bar_code">Código do produto:</label>
-              <input className='my-input' autoFocus required type="text" autoComplete='false' name="bar_code" id="bar_code" />
+              <input className='my-input' ref={firstInput} autoFocus required type="text" autoComplete='false' name="bar_code" id="bar_code" />
             </div>
             
             <div className="form-item">

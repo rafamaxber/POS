@@ -20,6 +20,7 @@ import { getStorage } from "firebase/storage";
 
 export enum CollectionNames {
   STOCK = "stock",
+  PRODUCT_CATEGORIES = "product_categories",
 }
 
 const firebaseConfig = {

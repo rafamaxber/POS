@@ -1,7 +1,8 @@
 /**
  *
  * @author Onur Zorluer
- *
+ * https://github.com/onurzorluer/react-image-file-resizer/blob/master/src/index.js
+ * Coped from https://github.com/onurzorluer/react-image-file-resizer/blob/master/src/index.js because not working with vite in mobile app
  */
  class Resizer {
   static changeHeightWidth(

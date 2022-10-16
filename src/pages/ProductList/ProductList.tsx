@@ -1,7 +1,7 @@
 import { ref, getDownloadURL } from 'firebase/storage'
 import { useEffect, useState } from 'react'
 import { Loading } from '../../components/Loading/Loading'
-import { StockDataType, StockRepository } from '../../data/StockRepository'
+import { CategoryDataType, StockDataType, StockRepository } from '../../data/StockRepository'
 import { useStatus } from '../../hooks/useStatus'
 import { storage } from '../../gateways/firebase';
 import './style.css'
@@ -45,22 +45,39 @@ export function ProductImage({ photoRef }: { photoRef: string }) {
 
 export default function ProductList() {
   const [products, setProducts] = useState<StockDataType[]>([])
+  const [categories, setCategories] = useState<CategoryDataType[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<StockDataType[] | null>(null)
   const { startLoading, stopLoading, setErrorLoading, loading } = useStatus();
   
   useEffect(() => {
     startLoading()
+    const stockRepository = new StockRepository();
+    
+    Promise.all([
+      stockRepository.getStockData(),
+      stockRepository.getCategoryData()
+    ]).then(([stockData, categoryData]) => {
+      setProducts(stockData)
+      setCategories(categoryData)
+    }).catch((error) => {
+      setErrorLoading(error.message)
+    }).finally(() => {
+      stopLoading()
+    });
 
-    new StockRepository().getStockData()
-      .then((data) => {
-        setProducts(data)
-      }).catch((error) => {
-        setErrorLoading(error.message)
-      })
-      .finally(() => {
-        stopLoading()
-      })
   }, [])
 
+  function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
+    const search = event.target.value.toLowerCase()
+    const filtered = products.filter((product) => {
+      return product.name.toLowerCase().includes(search) ||
+        product.category.toLowerCase().includes(search) ||
+        product.bar_code.toLowerCase().includes(search) ||
+        product.current_address.toLowerCase().includes(search)
+    })
+
+    setFilteredProducts(filtered)
+  }
 
   return (
     <>
@@ -69,7 +86,7 @@ export default function ProductList() {
         <div className="search-bar">
         <form className='search-form'>
           <div className="form-item">
-            <input className='my-input' autoFocus type="search" name="q" />
+            <input className='my-input' autoFocus type="search" name="q" onChange={handleSearch} />
           </div>
           <div className="form-button">
             <button className='my-btn' type="submit">Buscar</button>
@@ -81,22 +98,21 @@ export default function ProductList() {
           <nav className="side-bar">
             <h3 className="side-bar-title">Categorias</h3>
             <ul className='side-bar-list'>
-              <li className="side-bar-list-item">
-                <a href="#cat1">Categoria 1</a>
-              </li>
-              <li className="side-bar-list-item">
-                <a href="#cat1">Categoria 2</a>
-              </li>
-              <li className="side-bar-list-item">
-                <a href="#cat1">Categoria 3</a>
-              </li>
+            {
+                categories.map((category) => {
+                  return (
+                    <li key={category.key} className="side-bar-list-item">
+                      <a href={`#${category.key}`} className='side-bar-link'>{category.value}</a>
+                    </li>
+                  )
+                })
+              }
             </ul>
           </nav>
 
           <div className="product-list">
-            
             {
-              products && products.map((product) => (
+              (filteredProducts || products).map((product) => (
                 <div className="product-item" key={product.bar_code}>
                   <ProductImage photoRef={product.photo} />
                   <div className="product-info">
