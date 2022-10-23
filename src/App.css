@@ -38,4 +38,18 @@
   transform: scale(0.95);
 }
 
+.my-btn-v2 {
+  background-color: #06a550;
+}
 
+.my-btn-v2:hover {
+  background-color: #04c35d;
+}
+
+.my-btn-v3 {
+  background-color: #fa3452;
+}
+
+.my-btn-v3:hover {
+  background-color: #f92040;
+}

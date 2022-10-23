@@ -84,14 +84,14 @@ export default function ProductList() {
       {loading && <Loading />}
       <div className="page-container">
         <div className="search-bar">
-        <form className='search-form'>
+        <div className='search-form'>
           <div className="form-item">
             <input className='my-input' autoFocus type="search" name="q" onChange={handleSearch} />
           </div>
           <div className="form-button">
             <button className='my-btn' type="submit">Buscar</button>
           </div>
-        </form>
+        </div>
         </div>
 
         <div className="showcase">
@@ -113,25 +113,34 @@ export default function ProductList() {
           <div className="product-list">
             {
               (filteredProducts || products).map((product) => (
-                <div className="product-item" key={product.bar_code}>
-                  <ProductImage photoRef={product.photo} />
-                  <div className="product-info">
-                    <div className='product-title'>{product.name}</div>
-                    <div className='product-data-line'>
-                      <span className='product-key'>Código:</span> <span className='product-value'>{product.bar_code} {product.ref_code}</span>
+                <div className="product-item-container" key={product.bar_code}>
+                  <div className="product-item">
+                    <ProductImage photoRef={product.photo} />
+                    <div className="product-info">
+                      <div className='product-title'>{product.name}</div>
+                      <div className='product-data-line'>
+                        <span className='product-key'>Código:</span> <span className='product-value'>{product.bar_code} {product.ref_code}</span>
+                      </div>
+                      <div className='product-data-line'>
+                        <span className='product-key'>Preço:</span> <span className='product-value'>R$ {product.price_final}</span>
+                      </div>
+                      <div className='product-data-line'>
+                        <span className='product-key'>Quantidade:</span> <span className='product-value'>{product.quantity}</span>
+                      </div>
+                      {product?.expire_at && <div className='product-data-line'>
+                        {/* <span className='product-key'>Validade:</span> <span className='product-value'>{Timestamp.fromMillis product.expire_at.toDate().toJSON()}</span> */}
+                      </div>}
+                      <div className='product-data-line'>
+                        <span className='product-key'>Endereço:</span> <span className='product-value'>{product.current_address}</span>
+                      </div>
                     </div>
-                    <div className='product-data-line'>
-                      <span className='product-key'>Preço:</span> <span className='product-value'>R$ {product.price_final}</span>
-                    </div>
-                    <div className='product-data-line'>
-                      <span className='product-key'>Quantidade:</span> <span className='product-value'>{product.quantity}</span>
-                    </div>
-                    {product?.expire_at && <div className='product-data-line'>
-                      {/* <span className='product-key'>Validade:</span> <span className='product-value'>{Timestamp.fromMillis product.expire_at.toDate().toJSON()}</span> */}
-                    </div>}
-                    <div className='product-data-line'>
-                      <span className='product-key'>Endereço:</span> <span className='product-value'>{product.current_address}</span>
-                    </div>
+
+                  </div>
+
+                  <div className='product-actions'>
+                    <button className='my-btn'>Atualizar</button>
+                    <button className='my-btn my-btn-v2'>Vender</button> 
+                    <button className='my-btn my-btn-v3'>Excluir</button>
                   </div>
                 </div>
               ))

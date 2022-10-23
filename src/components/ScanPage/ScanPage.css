@@ -1,0 +1,39 @@
+.scan-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: calc(100vh - 60px);
+  text-align: center;
+  background-color: #fff;
+}
+
+.scan-page-container .bar-code-reader {
+  position: absolute;
+  z-index: -999999;
+}
+
+.scan-page-container__scan-icon {
+  width: 100%;
+}
+
+.scan-page-container__scan-icon__text {
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin-top: 1rem;
+  line-height: 2rem;
+}
+
+.scan-page-container__scan-icon__close {
+  color: #000000;
+  margin: 0 auto;
+  cursor: pointer;
+  font-size: 20px;
+  background-color: #ffeb3b;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 10px 50px;
+  text-align: center;
+}

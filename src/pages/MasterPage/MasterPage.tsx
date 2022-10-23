@@ -13,7 +13,6 @@ export default function MasterPage() {
             <ul className='nav-list'>
               <li><a href="/">Pagina inicial</a></li>
               <li><a href="/stock">Ver Estoque</a></li>
-              <li><a href="/stock">Vender</a></li>
               <li><a href="/stock/add">Incluir Produto no Estoque</a></li>
               <li><a onClick={logout}>Sair</a></li>
             </ul>

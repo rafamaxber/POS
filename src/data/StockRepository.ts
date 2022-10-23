@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, Timestamp } from "firebase/firestore";
+import { addDoc, collection, getDocs, query, Timestamp, updateDoc, where } from "firebase/firestore";
 import { CollectionNames, db } from "../gateways/firebase";
 
 export interface StockDataType {
@@ -37,6 +37,12 @@ export class StockRepository {
     });
   }
 
+  async getStockDataByBarCode(barCode: string): Promise<StockDataType> {
+    const data = await getDocs(query(collection(db, CollectionNames.STOCK), where("bar_code", "==", barCode)));
+    console.log('getStockDataByBarCode=>', data.docs.map((doc) => doc.data())[0])
+    return data.docs.map((doc) => doc.data())[0] as unknown as Promise<StockDataType>
+  }
+  
   async getStockData(): Promise<StockDataType[]> {
     const data = await getDocs(query(collection(db, CollectionNames.STOCK)));
     return data.docs.map((doc) => doc.data()) as unknown as Promise<StockDataType[]>
@@ -45,5 +51,12 @@ export class StockRepository {
   async getCategoryData(): Promise<CategoryDataType[]> {
     const data = await getDocs(query(collection(db, CollectionNames.PRODUCT_CATEGORIES)));
     return data.docs.map((doc) => doc.data()) as unknown as Promise<CategoryDataType[]>
+  }
+  
+  async addCategoryData(body: CategoryDataType) {
+    return addDoc(collection(db, CollectionNames.PRODUCT_CATEGORIES), {
+      value: body.value,
+      key: body.key
+    });
   }
 }

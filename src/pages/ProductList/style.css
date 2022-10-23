@@ -39,17 +39,28 @@
 
 .product-list {
   width: 100%;
-  background-color: #fff;
   border-radius: 5px;
   min-width: 470px;
 }
 
-.product-item {
-  display: flex;
+.product-item-container {
   border-bottom: 1px solid #ebebeb;
   padding: 10px;
+  background-color: #fff;
+  margin-bottom: 32px;
+}
+
+
+.product-item {
+  display: flex;
   justify-content: flex-start;
   gap: 16px;
+}
+
+.product-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
 }
 
 .product-item:last-child {
