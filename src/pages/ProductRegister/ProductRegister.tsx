@@ -9,8 +9,9 @@ import CreatableSelect from 'react-select/creatable';
 
 import './style.css'
 import { slugify } from '../../helpers/slugify';
+import { OnChangeValue } from 'react-select';
 
-interface CategoryProps { label: string; value: string }
+interface CategoryProps { label: string; value: string, __isNew__?: boolean }
 
 export default function ProductRegister() {
   const [photoRef, setPhotoRef] = useState('');
@@ -65,12 +66,12 @@ export default function ProductRegister() {
         toast.success('Produto cadastrado com sucesso!');
       })
     } catch (error) {
-      toast.error(error.message);
+      toast.error(new Error(String(error)).message);
     }
   }
 
-  function handleBarCodeValue(event: React.ChangeEvent<HTMLInputElement>) {
-    setBarCodeValue(event.target.value);
+  function handleBarCodeValue(event: React.FormEvent<HTMLInputElement>) {
+    setBarCodeValue(event.currentTarget.value);
   }
   
   function handleScanSubmit(barCode: string) {
@@ -81,8 +82,8 @@ export default function ProductRegister() {
     setBarCodeInputManually(true);
   }
   
-  function handleInputChange(event) {
-    const target = event.target;
+  function handleInputChange(event: React.FormEvent<HTMLInputElement>) {
+    const target = event.currentTarget;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
 
@@ -94,16 +95,16 @@ export default function ProductRegister() {
     console.log(formData);
   }
 
-  function handleCategoryChange(selectedCategory = { value: '', label: '', __isNew__: false }) {
+  function handleCategoryChange(newValue: OnChangeValue<CategoryProps, false>) {
     let categoryData = {
-      label: selectedCategory?.label,
-      value: selectedCategory?.value,
+      label: newValue?.label || '',
+      value: newValue?.value || '',
     };
 
-    if (selectedCategory?.__isNew__) {
+    if (newValue?.__isNew__) {
       categoryData = {
-        label: selectedCategory?.label,
-        value: slugify(selectedCategory?.value),
+        label: newValue?.label,
+        value: slugify(newValue?.value),
       }
 
       setNewCategory(categoryData);
