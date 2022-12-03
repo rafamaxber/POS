@@ -1,10 +1,11 @@
 import { ref, getDownloadURL } from 'firebase/storage'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Loading } from '../../components/Loading/Loading'
 import { CategoryDataType, StockDataType, StockRepository } from '../../data/StockRepository'
 import { useStatus } from '../../hooks/useStatus'
 import { storage } from '../../gateways/firebase';
 import './style.css'
+import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, useDisclosure } from '@chakra-ui/react'
 
 export function ProductImage({ photoRef }: { photoRef: string }) {
   const [photoUrl, setPhotoUrl] = useState('')
@@ -47,8 +48,10 @@ export default function ProductList() {
   const [products, setProducts] = useState<StockDataType[]>([])
   const [categories, setCategories] = useState<CategoryDataType[]>([])
   const [filteredProducts, setFilteredProducts] = useState<StockDataType[] | null>(null)
+  const [modalData, setModalData] = useState<{type: string; data: StockDataType } | null>(null)
   const { startLoading, stopLoading, setErrorLoading, loading } = useStatus();
-  
+  const { isOpen, onOpen, onClose } = useDisclosure()
+
   useEffect(() => {
     startLoading()
     const stockRepository = new StockRepository();
@@ -79,6 +82,40 @@ export default function ProductList() {
     setFilteredProducts(filtered)
   }
 
+  // function handleEdit(product: StockDataType) {
+  //   console.log('EDIT::', product)
+  // }
+  
+  // function handleSell(product: StockDataType) {
+  //   console.log('SELL::', product)
+  // }
+
+  function handleOpenModalDeleteProduct(product: StockDataType) {
+    onOpen();
+
+    setModalData({
+      type: 'DELETE',
+      data: product
+    })
+  }
+  
+  async function handleDeleteProduct() {
+    const stockRepository = new StockRepository();
+    startLoading()
+
+    modalData?.data.id && stockRepository.deleteStockData(modalData?.data.id)
+    .then(() => {
+      setProducts(products.filter((product) => product.id !== modalData?.data.id))
+      onClose()
+    })
+    .catch((error) => {
+      setErrorLoading(error.message)
+    })
+    .finally(() => {
+      stopLoading()
+    });
+  }
+
   return (
     <>
       {loading && <Loading />}
@@ -99,21 +136,19 @@ export default function ProductList() {
             <h3 className="side-bar-title">Categorias</h3>
             <ul className='side-bar-list'>
             {
-                categories.map((category) => {
-                  return (
-                    <li key={category.key} className="side-bar-list-item">
-                      <a href={`#${category.key}`} className='side-bar-link'>{category.value}</a>
-                    </li>
-                  )
-                })
-              }
+                categories.map((category) => (
+                  <li key={category.key} className="side-bar-list-item">
+                    <a href={`#${category.key}`} className='side-bar-link'>{category.value}</a>
+                  </li>
+                ))
+            }
             </ul>
           </nav>
 
           <div className="product-list">
             {
               (filteredProducts || products).map((product) => (
-                <div className="product-item-container" key={product.bar_code}>
+                <div className="product-item-container" key={product.id}>
                   <div className="product-item">
                     <ProductImage photoRef={product.photo} />
                     <div className="product-info">
@@ -138,9 +173,9 @@ export default function ProductList() {
                   </div>
 
                   <div className='product-actions'>
-                    <button className='my-btn'>Atualizar</button>
-                    <button className='my-btn my-btn-v2'>Vender</button> 
-                    <button className='my-btn my-btn-v3'>Excluir</button>
+                    {/* <button className='my-btn' onClick={() => handleEdit(product)}>Atualizar</button>
+                    <button className='my-btn my-btn-v2' onClick={() => handleSell(product)}>Vender</button>  */}
+                    <button className='my-btn my-btn-v3' onClick={() => handleOpenModalDeleteProduct(product)}>Excluir</button>
                   </div>
                 </div>
               ))
@@ -149,6 +184,43 @@ export default function ProductList() {
           </div>
         </div>
       </div>
+
+      <DeleteProduct isOpen={isOpen} onClose={onClose} onDelete={handleDeleteProduct}/>
     </>
+  )
+}
+
+function DeleteProduct({ isOpen, onClose, onDelete }: {isOpen: boolean, onClose: () => void, onDelete: () => void}) {
+  const cancelRef = useRef()
+
+  return (
+    <AlertDialog
+      isOpen={isOpen}
+      //@ts-ignore
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
+    >
+      <AlertDialogOverlay>
+        <AlertDialogContent>
+          <AlertDialogHeader fontSize='lg' fontWeight='bold'>
+            Apagar Produto
+          </AlertDialogHeader>
+
+          <AlertDialogBody>
+            Tem certeza que quer apagar este produto?
+          </AlertDialogBody>
+
+          <AlertDialogFooter>
+            {/* @ts-ignore */}
+            <Button ref={cancelRef} onClick={onClose}>
+              Não, Cancelar
+            </Button>
+            <Button colorScheme='red' onClick={onDelete} ml={3}>
+              Sim
+            </Button>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialogOverlay>
+    </AlertDialog>
   )
 }

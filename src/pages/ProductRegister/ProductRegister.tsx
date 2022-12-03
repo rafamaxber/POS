@@ -3,13 +3,13 @@ import { toast } from 'react-toastify';
 import { ScanPage } from '../../components/ScanPage/ScanPage';
 import { UploadFile } from '../../components/UploadFile/UploadFile';
 import { CategoryDataType, StockDataType, StockRepository } from '../../data/StockRepository';
+import { OnChangeValue } from 'react-select';
 import { getProductDataByEAN } from '../../gateways/brasilApi';
 import CreatableSelect from 'react-select/creatable';
 
 
 import './style.css'
 import { slugify } from '../../helpers/slugify';
-import { OnChangeValue } from 'react-select';
 
 interface CategoryProps { label: string; value: string, __isNew__?: boolean }
 
@@ -142,12 +142,12 @@ export default function ProductRegister() {
             </div>
             
             <div className="form-item">
-              <label className='my-label' aria-required htmlFor="bar_code">Código de barras do produto:</label>
-              <input className='my-input' ref={firstInput} autoFocus required type="text" autoComplete='false' onInput={handleBarCodeValue} value={barCodeValue} name="bar_code" id="bar_code" />
+              <label className='my-label' htmlFor="bar_code">Código de barras do produto:</label>
+              <input className='my-input' ref={firstInput} autoFocus type="text" autoComplete='false' onInput={handleBarCodeValue} value={barCodeValue} name="bar_code" id="bar_code" />
             </div>
             
             <div className="form-item">
-              <label className='my-label' aria-required htmlFor="ref_code">SKU:</label>
+              <label className='my-label' htmlFor="ref_code">SKU:</label>
               <input className='my-input' type="text" onInput={handleInputChange} autoComplete='false' name="ref_code" id="ref_code" />
             </div>
             

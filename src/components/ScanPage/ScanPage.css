@@ -17,6 +17,10 @@
   width: 100%;
 }
 
+.scan-page-container__scan-icon svg {
+  display: inline-block;
+}
+
 .scan-page-container__scan-icon__text {
   font-size: 1.5rem;
   font-weight: 500;
