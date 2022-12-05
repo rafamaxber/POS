@@ -1,5 +1,6 @@
 import { ref, getDownloadURL } from 'firebase/storage'
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Loading } from '../../components/Loading/Loading'
 import { CategoryDataType, StockDataType, StockRepository } from '../../data/StockRepository'
 import { useStatus } from '../../hooks/useStatus'
@@ -81,11 +82,6 @@ export default function ProductList() {
 
     setFilteredProducts(filtered)
   }
-
-  // function handleEdit(product: StockDataType) {
-  //   console.log('EDIT::', product)
-  // }
-  
   // function handleSell(product: StockDataType) {
   //   console.log('SELL::', product)
   // }
@@ -173,8 +169,10 @@ export default function ProductList() {
                   </div>
 
                   <div className='product-actions'>
-                    {/* <button className='my-btn' onClick={() => handleEdit(product)}>Atualizar</button>
-                    <button className='my-btn my-btn-v2' onClick={() => handleSell(product)}>Vender</button>  */}
+                    <Link to={`/stock/${product.id}/edit`}>
+                      <button className='my-btn'>Atualizar</button>
+                    </Link>
+                    {/* <button className='my-btn my-btn-v2' onClick={() => handleSell(product)}>Vender</button>  */}
                     <button className='my-btn my-btn-v3' onClick={() => handleOpenModalDeleteProduct(product)}>Excluir</button>
                   </div>
                 </div>
