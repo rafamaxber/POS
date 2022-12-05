@@ -64,7 +64,7 @@ export default function ProductRegister() {
             
             if (key === 'expire_at') {
               const expireAt = value ? new Date(new Timestamp(value?.seconds, value?.nanoseconds).toDate()) : null;
-              const expireAtFormatted = expireAt ? `${expireAt.getFullYear()}-${expireAt.getMonth() + 1}-${String(expireAt.getDate()).padStart(2,0)}` : '';
+              const expireAtFormatted = expireAt ? `${expireAt.getFullYear()}-${expireAt.getMonth() + 1}-${String(expireAt.getDate()).padStart(2,'0')}` : '';
 
               setFormData((oldData) => ({
                 ...oldData,
@@ -103,8 +103,8 @@ export default function ProductRegister() {
     try {
       if (newCategory) {
         new StockRepository().addCategoryData({
-          key: newCategory?.value || undefined,
-          value: newCategory?.label
+          key: String(newCategory?.value),
+          value: String(newCategory?.label),
         })
         .then(() => {
           toast.success('Nova categoria criada com sucesso!');
