@@ -183,6 +183,7 @@ export default function ProductRegister() {
       }
 
       setNewCategory(categoryData);
+      setCategoryData((oldData) => [...oldData, categoryData]);
     }
 
     setFormData((oldData) => ({
