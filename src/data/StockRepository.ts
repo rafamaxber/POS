@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, getDoc, query, Timestamp, deleteDoc, where, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, getDocs, getDoc, query, Timestamp, deleteDoc, where, doc, updateDoc, startAt } from "firebase/firestore";
 import { CollectionNames, db } from "../gateways/firebase";
 
 export interface CustomTimestamp {
@@ -81,6 +81,16 @@ export class StockRepository {
     const data = await getDocs(query(collection(db, CollectionNames.STOCK), where("bar_code", "==", barCode)));
 
     return data.docs.map((doc) => doc.data())[0] as unknown as Promise<StockDataType>
+  }
+  
+  async searchStockDataBy({ key, value }: { key: 'bar_code' | 'name' | 'category'; value: string | number }): Promise<StockDataType[]> {
+    // performing a SQl like query with firebase
+    const data = await getDocs(query(collection(db, CollectionNames.STOCK), where(key, ">=", value), where(key, "<=", value + "\uf8ff")));
+
+    return data.docs.map((doc) => ({
+      ...doc.data(),
+      id: doc.id,
+    })) as unknown as Promise<StockDataType[]>
   }
   
   async getStockDataById(id: string): Promise<StockDataType> {

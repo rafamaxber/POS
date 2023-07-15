@@ -16,6 +16,7 @@ const MasterPage = lazy(() => import('./pages/MasterPage/MasterPage'))
 const LoginPage = lazy(() => import('./pages/Login/Login'))
 const ProductList = lazy(() => import('./pages/ProductList/ProductList'))
 const ProductRegister = lazy(() => import('./pages/ProductRegister/ProductRegister'))
+const Sell = lazy(() => import('./pages/Sell/Sell'))
 
 const router = createBrowserRouter([
   {
@@ -43,6 +44,10 @@ const router = createBrowserRouter([
       {
         path: "stock/:id/edit",
         element: <ProductRegister />,
+      },
+      {
+        path: "vender",
+        element: <Sell />,
       },
     ]
   },

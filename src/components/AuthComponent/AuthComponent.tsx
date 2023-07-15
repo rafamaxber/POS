@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth } from '../../gateways/firebase';
 import { Loading } from '../Loading/Loading';
 
-export function AuthComponent({ children }: { children: any }) {
+export function AuthComponent({ children }: { children: React.ReactNode }) {
   const [user, userLoading, userError] = useAuthState(auth);
   const navigate = useNavigate();
   const [action, setAction] = useState('login');
