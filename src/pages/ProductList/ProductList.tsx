@@ -35,6 +35,12 @@ export default function ProductList() {
   }, [])
 
   function handleStockDataByCategory(category: string) {
+
+    if (category === 'all') {
+      setFilteredProducts(null)
+      return
+    }
+
     const filtered = products.filter((product) => product.category === category)
 
     setFilteredProducts(filtered)
@@ -120,6 +126,9 @@ export default function ProductList() {
           <nav className="side-bar">
             <h3 className="side-bar-title">Categorias</h3>
             <ul className='side-bar-list'>
+              <li className="side-bar-list-item">
+                <button onClick={() => handleStockDataByCategory('all')} className='side-bar-link'>Todos</button>
+              </li>
             {
                 categories.map((category) => (
                   <li key={category.key} className="side-bar-list-item">
