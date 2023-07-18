@@ -18,6 +18,20 @@
   padding-left: 8px;
 }
 
+.my-btn-circle {
+  height: 20px;
+  width: 20px;
+  text-align: center;
+  border-radius: 50%;
+  border: none;
+  background-color: #3483fa;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0px 0 0 2px;
+  transition: ease-in-out 0.2s;
+}
+
 .my-btn {
   height: 40px;
   border-radius: 5px;
@@ -52,4 +66,11 @@
 
 .my-btn-v3:hover {
   background-color: #f92040;
+}
+
+.my-btn[disabled] {
+    opacity: .5;
+    transition: none;
+    transform: none;
+    cursor: not-allowed;
 }

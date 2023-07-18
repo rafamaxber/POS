@@ -15,12 +15,19 @@ import {
   collection,
   where,
   addDoc,
+  Timestamp
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 export enum CollectionNames {
   STOCK = "stock",
   PRODUCT_CATEGORIES = "product_categories",
+  ORDERS = "orders",
+}
+
+export interface CustomTimestamp extends Timestamp {
+  seconds: number,
+  nanoseconds: number
 }
 
 const firebaseConfig = {
@@ -42,7 +49,7 @@ export const storage = getStorage(app);
 
 
 // function getSKU({ myFirstInput, mySecondInput }) {
-//   var firstValue = String(myFirstInput).substring(0, 2); 
+//   var firstValue = String(myFirstInput).substring(0, 2);
 //   var secondValue = String(mySecondInput).substring(0,2);
 //   var num1 = document.getElementById('num1').value.substring(0,2);
 //   var num2 = document.getElementById('num2').value.substring(0,2);
@@ -77,8 +84,7 @@ export const signInWithGoogle = async () => {
 
 export const logInWithEmailAndPassword = async (email: string, password: string) => {
   try {
-    const a = await signInWithEmailAndPassword(auth, email, password);
-    console.log(a)
+    await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
     console.error(err);
     throw err;

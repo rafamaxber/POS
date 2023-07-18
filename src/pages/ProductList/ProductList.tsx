@@ -1,49 +1,12 @@
-import { ref, getDownloadURL } from 'firebase/storage'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Loading } from '../../components/Loading/Loading'
 import { CategoryDataType, StockDataType, StockRepository } from '../../data/StockRepository'
 import { useStatus } from '../../hooks/useStatus'
-import { storage } from '../../gateways/firebase';
 import './style.css'
 import { AlertDialog, AlertDialogBody, AlertDialogContent, AlertDialogFooter, AlertDialogHeader, AlertDialogOverlay, Button, useDisclosure } from '@chakra-ui/react'
-
-export function ProductImage({ photoRef }: { photoRef: string }) {
-  const [photoUrl, setPhotoUrl] = useState('')
-  const { startLoading, stopLoading, setErrorLoading, loading } = useStatus();
-
-  useEffect(() => {
-    if (photoRef) {
-      startLoading();
-
-      const gsReference = ref(storage, photoRef);
-      getDownloadURL(gsReference).then((url) => {
-        console.log(url);
-        setPhotoUrl(url);
-      }).catch((error) => {
-        setErrorLoading(error)
-        console.log(error);
-      }).finally(() => {
-        stopLoading()
-      })
-    }
-  }, [photoRef]);
-
-
-    if (loading || !photoUrl) {
-      return (
-        <div className='product-image'>
-          <img src='data:image/webp;base64,UklGRooEAABXRUJQVlA4WAoAAAAgAAAAlQAAlQAASUNDUBgCAAAAAAIYAAAAAAQwAABtbnRyUkdCIFhZWiAAAAAAAAAAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAAHRyWFlaAAABZAAAABRnWFlaAAABeAAAABRiWFlaAAABjAAAABRyVFJDAAABoAAAAChnVFJDAAABoAAAAChiVFJDAAABoAAAACh3dHB0AAAByAAAABRjcHJ0AAAB3AAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAFgAAAAcAHMAUgBHAEIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFhZWiAAAAAAAABvogAAOPUAAAOQWFlaIAAAAAAAAGKZAAC3hQAAGNpYWVogAAAAAAAAJKAAAA+EAAC2z3BhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABYWVogAAAAAAAA9tYAAQAAAADTLW1sdWMAAAAAAAAAAQAAAAxlblVTAAAAIAAAABwARwBvAG8AZwBsAGUAIABJAG4AYwAuACAAMgAwADEANlZQOCBMAgAAcBEAnQEqlgCWAD4pFIlDIaEhEapsJBgChLS3cLr4shaz5hhZAjgZKPiA0nEzf9dfPYQ0XLIKGyRcsgobJFyyChskXLIJm7ZZ/1p/JFBsdvOwitjFFI/4246/wjTxzeyuErEmT0OseN+s9VeXgPp0yvV72EeLeoh6bpn0E3bgj1PxmyRdrgUNki5ZBQ2SLlkFDZItIAD+/9LsACGdcrGzxlPU6BOCq7wa7A7fz4x9GAZG0jiv0pyVNFHCRm7C0PnT0a/rRI+4M8LMkqhv6G7vXqj/IBZLlnkO/TQOhGuJbxMXnIUlrkRT+2uVYh6emOKuJhzUfg8gmgOGbwzMbKPaJzEQbuIl7pDVe6RH33vofZlbCgbeZxxdS4I2osCDsgIpz55Q/yX5b0y8+W4CisuMF22U9wx9E+6SfooulF69Tt0JFk043oLESFhaKKA/my1O/0LXLe5arfemH/z2qVRkOFBHhAifJsUaSH5qoVJTvywK1kczNm28v4Mnhn21s7TeT7BJgBLOIjcoXsVwPnz+6oOosRUhFTPczYRnMD78rAnlbn3gHP5x+CbJH++wPVoZUO/xQjKJ/Vulyuzga1W7ezoCHpba29/r8FQAT/+juZpFMnl2pTdo3MNl9byzUzH7wawVI+DwK3zCyHxVCBiJBbKpQWhoY9bMgy9ocKhxsJLQjPc8qjCUR2FVAiBFY29sCFSIbeMhAHz6krpCOTvSvVlpZE8V+0lHK3jPS59CsfGs6S+05kQeX9/HOQpl1nGmEgpTOf5IEAAAAAAA' alt="product" loading='lazy' />
-        </div>
-      )
-    }
-  
-    return (
-      <div className='product-image'>
-        <img src={photoUrl} alt="product" loading='lazy' />
-      </div>
-    )
-}
+import { Image } from '../../components/Image/Image'
+import { format } from 'date-fns'
 
 export default function ProductList() {
   const [products, setProducts] = useState<StockDataType[]>([])
@@ -56,7 +19,7 @@ export default function ProductList() {
   useEffect(() => {
     startLoading()
     const stockRepository = new StockRepository();
-    
+
     Promise.all([
       stockRepository.getStockData(),
       stockRepository.getCategoryData()
@@ -71,6 +34,12 @@ export default function ProductList() {
 
   }, [])
 
+  function handleStockDataByCategory(category: string) {
+    const filtered = products.filter((product) => product.category === category)
+
+    setFilteredProducts(filtered)
+  }
+
   function handleSearch(event: React.ChangeEvent<HTMLInputElement>) {
     const search = event.target.value.toLowerCase()
     const filtered = products.filter((product) => {
@@ -82,9 +51,6 @@ export default function ProductList() {
 
     setFilteredProducts(filtered)
   }
-  // function handleSell(product: StockDataType) {
-  //   console.log('SELL::', product)
-  // }
 
   function handleOpenModalDeleteProduct(product: StockDataType) {
     onOpen();
@@ -94,7 +60,7 @@ export default function ProductList() {
       data: product
     })
   }
-  
+
   async function handleDeleteProduct() {
     const stockRepository = new StockRepository();
     startLoading()
@@ -110,6 +76,29 @@ export default function ProductList() {
     .finally(() => {
       stopLoading()
     });
+  }
+
+  function sortProductList(a: StockDataType, b: StockDataType) {
+    if (a.quantity > b.quantity) {
+      return 1
+    }
+    if (a.quantity < b.quantity) {
+      return -1
+    }
+
+    return 0
+  }
+
+  function getClassNameByQuantity(quantity: number) {
+    if (quantity <= 0) {
+      return 'product-item-container--out-of-stock'
+    }
+
+    if (quantity <= 5) {
+      return 'product-item-container--low-stock'
+    }
+
+    return ''
   }
 
   return (
@@ -134,7 +123,7 @@ export default function ProductList() {
             {
                 categories.map((category) => (
                   <li key={category.key} className="side-bar-list-item">
-                    <a href={`#${category.key}`} className='side-bar-link'>{category.value}</a>
+                    <button onClick={() => handleStockDataByCategory(category.key)} className='side-bar-link'>{category.value}</button>
                   </li>
                 ))
             }
@@ -143,10 +132,10 @@ export default function ProductList() {
 
           <div className="product-list">
             {
-              (filteredProducts || products).map((product) => (
-                <div className="product-item-container" key={product.id}>
+              (filteredProducts || products).sort(sortProductList).map((product) => (
+                <div className={`product-item-container ${getClassNameByQuantity(product.quantity)}`} key={product.id}>
                   <div className="product-item">
-                    <ProductImage photoRef={product.photo} />
+                    <Image photoRef={product.photo} />
                     <div className="product-info">
                       <div className='product-title'>{product.name}</div>
                       <div className='product-data-line'>
@@ -158,9 +147,11 @@ export default function ProductList() {
                       <div className='product-data-line'>
                         <span className='product-key'>Quantidade:</span> <span className='product-value'>{product.quantity}</span>
                       </div>
-                      {product?.expire_at && <div className='product-data-line'>
-                        {/* <span className='product-key'>Validade:</span> <span className='product-value'>{Timestamp.fromMillis product.expire_at.toDate().toJSON()}</span> */}
-                      </div>}
+                      {product?.expire_at && (
+                        <div className='product-data-line'>
+                          <span className='product-key'>Validade:</span> <span className='product-value'>{format(product.expire_at.toDate(), 'dd/MM/yyyy HH:mm:ss')}</span>
+                        </div>
+                      )}
                       <div className='product-data-line'>
                         <span className='product-key'>Endereço:</span> <span className='product-value'>{product.current_address}</span>
                       </div>
@@ -172,7 +163,6 @@ export default function ProductList() {
                     <Link to={`/stock/${product.id}/edit`}>
                       <button className='my-btn'>Atualizar</button>
                     </Link>
-                    {/* <button className='my-btn my-btn-v2' onClick={() => handleSell(product)}>Vender</button>  */}
                     <button className='my-btn my-btn-v3' onClick={() => handleOpenModalDeleteProduct(product)}>Excluir</button>
                   </div>
                 </div>

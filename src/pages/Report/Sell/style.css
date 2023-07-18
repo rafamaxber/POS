@@ -1,0 +1,27 @@
+.page-container h1 {
+  font-size: 22px;
+  margin: 26px 0;
+}
+
+.report-table {
+  width: 100%;
+  margin: auto;
+}
+
+.report-table th {
+  text-align: center;
+  padding: 10px;
+  background-color: #3483fa;
+  color: #fff;
+}
+
+.report-table td {
+  text-align: center;
+  padding: 10px;
+  background-color: #fff;
+  color: #161616;
+}
+
+.report-table tr:nth-child(even) td {
+  background-color: #e4efff;
+}

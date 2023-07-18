@@ -33,8 +33,19 @@
   padding: 0 10px;
 }
 
+.side-bar-link {
+  color: #666;
+  display: block;
+  padding: 10px;
+  cursor: pointer;
+
+}
+.side-bar-link:hover {
+  text-decoration: underline;
+}
+
 .side-bar-title {
-  margin-top: 0;
+  margin: 0 0 10px;
 }
 
 .product-list {
@@ -90,4 +101,13 @@
   .product-list {
     min-width: 100%;
   }
+}
+
+.product-item-container--out-of-stock {
+  background-color: #f9dada;
+  border: 1px solid #ff5d5d;
+}
+.product-item-container--low-stock {
+  background-color: #f9f3da;
+  border: 1px solid #fedc53;
 }
