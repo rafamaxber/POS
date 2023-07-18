@@ -28,15 +28,19 @@ export function AuthComponent({ children }: { children: React.ReactNode }) {
   if (action === 'loading') {
     return <Loading />
   }
-  
+
   if (action === 'error') {
     return <div>Error: {userError?.message}</div>;
   }
 
   if (action === 'user_not_found' && String(window.location.pathname).search('login') <= 0) {
     navigate('/login');
-    return null;
+    return <></>;
   }
 
-  return children;
+  return (
+    <>
+      {children}
+    </>
+  );
 }

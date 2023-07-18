@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, Timestamp, doc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, getDocs, Timestamp, doc, updateDoc } from "firebase/firestore";
 import { CollectionNames, db, CustomTimestamp } from "../gateways/firebase";
 
 export interface OrderDataType {
@@ -34,15 +34,18 @@ export class OrderRepository {
   }
 
   async getOrderData(): Promise<OrderDataType[]> {
-    const data = await getDocs(query(collection(db, CollectionNames.ORDERS)));
-    return data.docs
-      .map((doc) => ({
-        ...doc.data(),
-        id: doc.id,
-      }))
+    const data = await getDocs(collection(db, CollectionNames.ORDERS));
+
+    return data.docs.map((doc) => {
+      const data = doc.data() as OrderDataType
+      return {
+        ...data,
+        id: doc.id
+      }
+    })
       .sort((a, b) => {
         return b.created_at.seconds - a.created_at.seconds
-      }) as unknown as Promise<OrderDataType[]>
+      });
   }
 
   async updateOrderStatus(id: string, status: OrderStatusType) {

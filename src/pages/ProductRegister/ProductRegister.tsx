@@ -8,7 +8,6 @@ import { useStatus } from '../../hooks/useStatus'
 
 import { CategoryDataType, StockDataType, StockRepository } from '../../data/StockRepository';
 import { OnChangeValue } from 'react-select';
-import { getProductDataByEAN } from '../../gateways/brasilApi';
 import CreatableSelect from 'react-select/creatable';
 
 import './style.css'
@@ -27,7 +26,7 @@ export default function ProductRegister() {
   const [formData, setFormData] = useState<StockDataType>();
   const formRef = useRef<HTMLFormElement>(null);
   const firstInput = useRef<HTMLInputElement>(null);
-  const { startLoading, stopLoading, setErrorLoading, loading } = useStatus();
+  const { startLoading, stopLoading } = useStatus();
   const navigate = useNavigate();
 
 
@@ -274,7 +273,7 @@ export default function ProductRegister() {
           <div className="form-card">
             <div className="form-item">
               <label className='my-label' htmlFor="expire_at">Validade:</label>
-              <input className='my-input' type="date" autoComplete='false' name="expire_at" id="expire_at" onInput={handleInputChange}  value={formData?.expire_at as string}/>
+              <input className='my-input' type="date" autoComplete='false' name="expire_at" id="expire_at" onInput={handleInputChange}  value={String(formData?.expire_at)}/>
             </div>
           </div>
 

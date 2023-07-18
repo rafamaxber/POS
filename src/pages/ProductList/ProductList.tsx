@@ -144,7 +144,7 @@ export default function ProductList() {
               (filteredProducts || products).sort(sortProductList).map((product) => (
                 <div className={`product-item-container ${getClassNameByQuantity(product.quantity)}`} key={product.id}>
                   <div className="product-item">
-                    <Image photoRef={product.photo} />
+                    <Image photoRef={String(product.photo)} />
                     <div className="product-info">
                       <div className='product-title'>{product.name}</div>
                       <div className='product-data-line'>

@@ -16,7 +16,7 @@ export default function MasterPage() {
               <li><a href="/stock">Ver Estoque</a></li>
               <li><a href="/stock/add">Incluir Produto no Estoque</a></li>
               <li><a href="/ver-vendas">Histórico de vendas</a></li>
-              <li><a onClick={logout}>Sair</a></li>
+              <li><button onClick={logout}>Sair</button></li>
             </ul>
           </nav>
         </header>

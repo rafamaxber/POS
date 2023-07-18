@@ -6,11 +6,12 @@ import { SingleValue } from "react-select/dist/declarations/src/types";
 
 import { useStatus } from '../../hooks/useStatus'
 import { Loading } from '../../components/Loading/Loading'
-import { CategoryDataType, CustomTimestamp, StockDataType, StockRepository } from '../../data/StockRepository'
-import { OrderDataType, OrderRepository, OrderStatusType } from "../../data/OrderRepository";
+import { StockRepository } from '../../data/StockRepository'
+import { OrderRepository, OrderStatusType } from "../../data/OrderRepository";
 import { Image } from '../../components/Image/Image'
 import './style.css'
 import { formarNumber } from "../../helpers/formatNumber";
+import { CustomTimestamp } from "../../gateways/firebase";
 
 interface ProductDataType {
   id: string | undefined;
@@ -23,8 +24,8 @@ interface ProductDataType {
   quantity: number;
   inStockQuantity: number;
   ref_code: number;
-  expire_at: string | CustomTimestamp;
-  photo?: any;
+  expire_at: CustomTimestamp;
+  photo?: string;
   value: string | undefined;
   label: string;
 }
@@ -160,7 +161,7 @@ export default function SellPage() {
     const promises = order.map((product) => {
       const newQuantity = product.inStockQuantity - product.quantity;
       return stockRepository.updateItemQuantityToStock(
-        product.id,
+        String(product.id),
         {
           quantity: newQuantity < 0 ? 0 : newQuantity,
         }
@@ -184,6 +185,7 @@ export default function SellPage() {
               placeholder="Código de barras, Nome do produto ou use o leitor de código de barras"
               cacheOptions
               escapeClearsValue
+              /* @ts-ignore */
               loadOptions={selectLoadOptions}
               isClearable
               isSearchable
@@ -230,7 +232,7 @@ export default function SellPage() {
             {
               order.map((product) => (
                 <div className="item" key={product.id}>
-                  <Image photoRef={product.photo} />
+                  <Image photoRef={String(product.photo)} />
                   <div className="title">
                     {product.name}
                     <div className="cod">{product.bar_code}</div>

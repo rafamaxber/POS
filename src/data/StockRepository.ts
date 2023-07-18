@@ -12,7 +12,7 @@ export interface StockDataType {
   quantity: number,
   ref_code: number,
   expire_at: CustomTimestamp,
-  photo?: any
+  photo?: unknown
 }
 
 export type CategoryDataType = {
@@ -31,7 +31,7 @@ export class StockRepository {
       price_cost: body.price_cost || '',
       price_final: body.price_final || '',
       quantity: Number(body.quantity),
-      expire_at: body.expire_at ? Timestamp.fromDate(new Date(body.expire_at as string)) : null,
+      expire_at: body.expire_at ? Timestamp.fromDate(new Date(String(body.expire_at))) : null,
       updated_at: Timestamp.fromDate(new Date()),
       created_at: Timestamp.fromDate(new Date()),
       photo: body.photo
