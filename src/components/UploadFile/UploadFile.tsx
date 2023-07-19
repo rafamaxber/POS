@@ -61,7 +61,6 @@ function resizeFile(file: File): Promise<string | File | Blob | ProgressEvent<Fi
       100,
       0,
       (uri: string) => {
-        console.log(uri)
         return resolve(uri);
       },
       "file",

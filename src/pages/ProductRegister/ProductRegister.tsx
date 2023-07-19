@@ -8,7 +8,6 @@ import { useStatus } from '../../hooks/useStatus'
 
 import { CategoryDataType, StockDataType, StockRepository } from '../../data/StockRepository';
 import { OnChangeValue } from 'react-select';
-import { getProductDataByEAN } from '../../gateways/brasilApi';
 import CreatableSelect from 'react-select/creatable';
 
 import './style.css'
@@ -27,7 +26,7 @@ export default function ProductRegister() {
   const [formData, setFormData] = useState<StockDataType>();
   const formRef = useRef<HTMLFormElement>(null);
   const firstInput = useRef<HTMLInputElement>(null);
-  const { startLoading, stopLoading, setErrorLoading, loading } = useStatus();
+  const { startLoading, stopLoading } = useStatus();
   const navigate = useNavigate();
 
 
@@ -37,7 +36,7 @@ export default function ProductRegister() {
         setCategoryData(data.map(c => ({ value: c.key, label: c.value })));
       });
   }, []);
-  
+
   useEffect(() => {
     if (productIdInEdition) {
       new StockRepository().getStockDataById(productIdInEdition)
@@ -56,12 +55,12 @@ export default function ProductRegister() {
               } as StockDataType));
               return;
             }
-            
+
             if (key === 'photo') {
               setPhotoRef(value)
               return;
             }
-            
+
             if (key === 'expire_at') {
               const expireAt = value ? new Date(new Timestamp(value?.seconds, value?.nanoseconds).toDate()) : null;
               const expireAtFormatted = expireAt ? `${expireAt.getFullYear()}-${expireAt.getMonth() + 1}-${String(expireAt.getDate()).padStart(2,'0')}` : '';
@@ -84,22 +83,22 @@ export default function ProductRegister() {
       })
     }
   }, [categoryData]);
-  
-  useEffect(() => {
-    if (barCodeValue) {
-      new StockRepository().getStockDataByBarCode(barCodeValue)
-        .then((data: StockDataType) => {
-          console.log(data);
-        });
-    }
-  }, [barCodeValue]);
-  
+
+  // useEffect(() => {
+  //   if (barCodeValue) {
+  //     new StockRepository().getStockDataByBarCode(barCodeValue)
+  //       .then((data: StockDataType) => {
+  //         console.log(data);
+  //       });
+  //   }
+  // }, [barCodeValue]);
+
   function handleRegister(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     startLoading();
 
     const body = formData as StockDataType;
-    
+
     try {
       if (newCategory) {
         new StockRepository().addCategoryData({
@@ -110,7 +109,7 @@ export default function ProductRegister() {
           toast.success('Nova categoria criada com sucesso!');
         })
       }
-      
+
       if (productIdInEdition) {
         new StockRepository().updateItemToStock(productIdInEdition, {
           ...body,
@@ -148,15 +147,15 @@ export default function ProductRegister() {
   function handleBarCodeValue(event: React.FormEvent<HTMLInputElement>) {
     setBarCodeValue(event.currentTarget.value);
   }
-  
+
   function handleScanSubmit(barCode: string) {
     setBarCodeValue(barCode);
   }
-  
+
   function handleScanClose() {
     setBarCodeInputManually(true);
   }
-  
+
   function handleInputChange(event: React.FormEvent<HTMLInputElement>) {
     const target = event.currentTarget;
     const value = target.type === 'checkbox' ? target.checked : target.value;
@@ -166,8 +165,6 @@ export default function ProductRegister() {
       ...oldData,
       [name]: value
     } as StockDataType));
-
-    console.log(formData);
   }
 
   function handleCategoryChange(newValue: OnChangeValue<CategoryProps, false>) {
@@ -190,7 +187,7 @@ export default function ProductRegister() {
       ...oldData,
       category: categoryData?.value,
     } as StockDataType));
-    
+
   }
 
   if (!barCodeValue && !barCodeInputManually && String(window.location.pathname).includes('stock/add')) {
@@ -202,7 +199,7 @@ export default function ProductRegister() {
   return (
     <div className="page-container-all">
       <div className="product-form">
-        
+
         <div className='product-form-header'>
           {
             productIdInEdition ? (
@@ -218,33 +215,33 @@ export default function ProductRegister() {
         </div>
 
         <form className='product-register-form' onSubmit={handleRegister} ref={formRef}>
-          
+
           <div className="form-card">
 
             <div className='form-card-title'>
               Insira somente as informações do produto necessárias
             </div>
-            
+
             <div className="form-item">
               <label className='my-label' htmlFor="bar_code">Código de barras do produto:</label>
               <input className='my-input' ref={firstInput} autoFocus type="text" autoComplete='false' onInput={handleBarCodeValue} value={barCodeValue} name="bar_code" id="bar_code" />
             </div>
-            
+
             <div className="form-item">
               <label className='my-label' htmlFor="ref_code">SKU:</label>
               <input className='my-input' type="text" onInput={handleInputChange} autoComplete='false' name="ref_code" id="ref_code" value={formData?.ref_code} />
             </div>
-            
+
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="name">Nome:</label>
               <input className='my-input' required type="text" onInput={handleInputChange} autoComplete='false' name="name" id="name" value={formData?.name} />
             </div>
-            
+
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="category">Categoria:</label>
               <CreatableSelect options={categoryData} name="category" id="category" onChange={handleCategoryChange} value={{ value: formData?.category, label: categoryData.find(d => d.value === formData?.category)?.label }} />
             </div>
-            
+
           </div>
 
           <div className="form-card">
@@ -252,31 +249,31 @@ export default function ProductRegister() {
               <label className='my-label' aria-required htmlFor="price_final">Preço de venda:</label>
               <input className='my-input' type="text" autoComplete='false' name="price_final" id="price_final" onInput={handleInputChange} value={formData?.price_final}/>
             </div>
-            
+
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="price_cost">Preço de compra:</label>
               <input className='my-input' type="text" autoComplete='false' name="price_cost" id="price_cost" onInput={handleInputChange} value={formData?.price_cost}/>
             </div>
           </div>
-            
+
           <div className="form-card">
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="quantity">Quantidade:</label>
               <input className='my-input' required type="number" autoComplete='false' name="quantity" id="quantity" onInput={handleInputChange} value={formData?.quantity} />
             </div>
           </div>
-            
+
           <div className="form-card">
             <div className="form-item">
               <label className='my-label' aria-required htmlFor="current_address">Endereço:</label>
               <input className='my-input' type="text" autoComplete='false' name="current_address" id="current_address" onInput={handleInputChange} value={formData?.current_address} />
             </div>
           </div>
-            
+
           <div className="form-card">
             <div className="form-item">
               <label className='my-label' htmlFor="expire_at">Validade:</label>
-              <input className='my-input' type="date" autoComplete='false' name="expire_at" id="expire_at" onInput={handleInputChange}  value={formData?.expire_at as string}/>
+              <input className='my-input' type="date" autoComplete='false' name="expire_at" id="expire_at" onInput={handleInputChange}  value={String(formData?.expire_at)}/>
             </div>
           </div>
 

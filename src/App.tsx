@@ -10,12 +10,14 @@ import {
 import { logInWithEmailAndPassword } from './gateways/firebase';
 import { Loading } from './components/Loading/Loading';
 
+const ReportSellPage = lazy(() => import('./pages/Report/Sell'));
 const Home = lazy(() => import('./pages/Home/Home'))
 const AuthLayout = lazy(() => import('./pages/AuthLayout/AuthLayout'))
 const MasterPage = lazy(() => import('./pages/MasterPage/MasterPage'))
 const LoginPage = lazy(() => import('./pages/Login/Login'))
 const ProductList = lazy(() => import('./pages/ProductList/ProductList'))
 const ProductRegister = lazy(() => import('./pages/ProductRegister/ProductRegister'))
+const Sell = lazy(() => import('./pages/Sell/Sell'))
 
 const router = createBrowserRouter([
   {
@@ -30,7 +32,7 @@ const router = createBrowserRouter([
       {
         path: "stock",
         element: <ProductList />,
-    
+
       },
       {
         path: "stock/:id",
@@ -43,6 +45,14 @@ const router = createBrowserRouter([
       {
         path: "stock/:id/edit",
         element: <ProductRegister />,
+      },
+      {
+        path: "vender",
+        element: <Sell />,
+      },
+      {
+        path: "ver-vendas",
+        element: <ReportSellPage />,
       },
     ]
   },
